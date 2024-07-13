@@ -9,9 +9,21 @@ import { getAllNetworkList } from "./redux/action";
 
 function App() {
   const [url, setUrl] = useState(null);
+  
   const dispatch = useDispatch();
   const { netoworkRequestDetails } = useSelector((store) => store);
   console.log(netoworkRequestDetails, "store");
+  const [filterData, setFilterData] = useState(netoworkRequestDetails)
+  const handleFilter = (el,i) =>{
+    console.log(el,i);
+   let filterData = netoworkRequestDetails?.filter((ele,i)=>{
+    if(el==="All"){
+      return netoworkRequestDetails;
+    }
+      return ele.type===el;
+    })
+    setFilterData(filterData)
+  }
 
   const handleRequest = async () => {
     if (!url) return;
@@ -38,7 +50,7 @@ function App() {
       <Header1 />
       <Header2 />
       <Header3 />
-      <Filter />
+      <Filter handleFilter={handleFilter}/>
       <div className="overflow-x-auto">
       <table className="min-w-full bg-[#1a202c] text-white border-collapse text-[12px]">
           <thead>
@@ -53,7 +65,7 @@ function App() {
           </thead>
           <tbody>
             {
-              netoworkRequestDetails?.map((req, index) => (
+              filterData?.map((req, index) => (
                 <tr key={index} className="bg-[#2d3748] hover:bg-[#4a5568]">
                   <td className="py-2 px-4 border border-[#4a5568]">
                     {req.resourceName}
